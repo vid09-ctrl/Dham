@@ -10,7 +10,6 @@ social-auth-core
 
 boto3==1.34.0
 botocore==1.34.0
-aiobotocore==2.7.0
 
 razorpay
 requests
