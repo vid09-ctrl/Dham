@@ -68,7 +68,6 @@ WSGI_APPLICATION = "ngo.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(
         env="DATABASE_URL",
-        default=None,
         conn_max_age=600,
         ssl_require=True,
     )
@@ -139,3 +138,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+
+
+print("DEBUG DATABASE_URL =", os.getenv("DATABASE_URL"))
