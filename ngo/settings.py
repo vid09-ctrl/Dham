@@ -71,10 +71,13 @@ WSGI_APPLICATION = "ngo.wsgi.application"
 # ===================== DATABASE =====================
 DATABASES = {
     "default": dj_database_url.parse(
-        os.getenv("DATABASE_URL"),
-        ssl_require=True,
+        os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"),
+        conn_max_age=600,
+        ssl_require=False,
     )
 }
+
+
 
 # ===================== PASSWORD VALIDATION =====================
 AUTH_PASSWORD_VALIDATORS = [
