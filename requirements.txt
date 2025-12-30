@@ -14,3 +14,4 @@ botocore==1.34.0
 razorpay
 requests
 pillow
+xhtml2pdf
