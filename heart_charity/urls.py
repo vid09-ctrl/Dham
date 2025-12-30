@@ -11,7 +11,6 @@ urlpatterns = [
     path("admin-dashboard/", views.admin_dashboard, name="admin_dashboard"),
     path("user-dashboard/", views.user_dashboard, name="user_dashboard"),
     path('welcome/', views.welcome_view, name='welcome'),
-    path('send-otp/', views.send_otp, name='send_otp'),
     path('access_control/', views.access_control, name='access_control'),
     path('check_module_access/<int:user_id>', views.check_module_access, name='check_module_access'),
     path('search/', views.search_users, name='search_users'),
