@@ -73,6 +73,7 @@ DATABASES = {
     )
 }
 
+print("DEBUG DATABASE_URL =", os.getenv("DATABASE_URL"))
 
 
 
@@ -141,4 +142,3 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 
-print("DEBUG DATABASE_URL =", os.getenv("DATABASE_URL"))
