@@ -1,155 +1,319 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>Donation Receipt - A5 Landscape</title>
+{% load custom_tags %}
 
 <style>
-    body {
-        font-family: DejaVu Sans, Arial, sans-serif;
-        font-size: 12px;
-        color: #000;
-        margin: 0;
-        padding: 10px;
-    }
+@page {
+    size: A5 landscape;
+    margin: 4mm;
+}
 
-    .wrapper {
-        border: 1px solid #777;
-        padding: 14px;
-    }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+    color: #000;
+    background: #fff;
+    line-height: 1.2;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
 
-    td, th {
-        padding: 4px 6px;
-        line-height: 1.25;
-        vertical-align: middle;
-    }
+td {
+    border: 1px solid #333;
+    padding: 4px;
+    vertical-align: top;
+    font-size: 9px;
+}
 
-    .bordered td, .bordered th {
-        border: 1px solid #aaa;
-    }
+/* OUTER BORDER */
+.thick-border {
+    border: 1.5px solid #000;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
 
-    .title {
-        text-align: center;
-        font-size: 21px;
-        font-weight: bold;
-        padding-bottom: 2px;
-    }
+/* HEADER */
+.header-table td {
+    background: #fff;
+    color: #000;
+    padding: 6px 4px;
+}
 
-    .subtitle {
-        text-align: center;
-        font-size: 12px;
-        margin-top: -4px;
-    }
+.header-title {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
 
-    .section-header {
-        background: #e6e6e6;
-        font-size: 14px;
-        font-weight: bold;
-        padding: 4px 6px;
-        margin-top: 12px;
-        margin-bottom: 6px;
-    }
+.header-sub {
+    font-size: 9px;
+    text-align: center;
+}
 
-    .right { text-align: right; }
-    .center { text-align: center; }
-    .bold { font-weight: bold; }
+.logo {
+    height: 67px;
+    object-fit: contain;
+}
 
-    hr {
-        border: none;
-        border-top: 1px solid #aaa;
-        margin: 8px 0;
+/* SECTION TITLES */
+.section-title {
+    background: #f5f5f5;
+    color: #000;
+    font-weight: bold;
+    font-size: 10px;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* AMOUNT */
+.amount {
+    text-align: right;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+/* TOTAL */
+.total-row td {
+    border-top: 2px solid #000;
+    background: #fafafa;
+    font-weight: bold;
+}
+
+/* LEGAL */
+.legal {
+    border: 1px solid #333;
+    padding: 5px;
+    font-size: 8.5px;
+    line-height: 1.3;
+    background: #f9f9f9;
+}
+
+/* SIGNATURE */
+.signature-space {
+    border-bottom: 1px solid #333;
+    height: 35px;
+    text-align: center;
+    padding-top: 22px;
+    font-weight: bold;
+    font-size: 9px;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    font-weight: bold;
+    font-size: 10px;
+    padding: 4px 0;
+    border-top: 1px solid #333;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* BUTTONS */
+.buttons {
+    text-align: center;
+    margin: 16px 0;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.buttons button, .buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.buttons button:hover, .buttons a:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.buttons svg {
+    width: 20px;
+    height: 20px;
+    stroke: #fff;
+    fill: none;
+    stroke-width: 2;
+}
+
+/* HIDE BUTTONS IN PRINT / PDF */
+@media print {
+    .buttons { 
+        display: none; 
     }
+}
 </style>
-
 </head>
+
 <body>
 
-<div class="wrapper">
+<table class="thick-border">
+<tr><td>
 
-    <!-- HEADER -->
-    <div class="title">
-        BHAGWAN MAHAVIR PASHU RAKSHA KENDRA
-    </div>
-    <div class="subtitle">
-        “Anchorwala Ahimsadham”
-    </div>
+<!-- HEADER -->
+<table class="header-table">
+<tr>
+    <td width="12%" style="border-right:0;">
+        <img src="{{ logo_url }}" class="logo" alt="Logo">
+    </td>
+    <td width="88%" style="border-left:0;">
+        <div class="header-title">BHAGWAN MAHAVIR PASHU RAKSHA KENDRA</div>
+        <div class="header-sub">Organised by: Sheth Shri Lalji Velji Shah</div>
+        <div class="header-sub"><b>'Anchorwala Ahinsadham'</b></div>
+        <div class="header-sub">Inspired by: Shri Jadavji Ravji Gangar</div>
+    </td>
+</tr>
+</table>
 
-    <!-- TOP INFORMATION -->
-    <table>
-        <tr>
-            <td>
-                <b>Donation Box ID:</b> {{ payment.donation_box.donation_id }}<br>
-                <b>Opened By:</b> {{ payment.opened_by }}<br>
-                <b>Received By:</b> {{ payment.received_by }}
-            </td>
+<!-- INFO -->
+<table>
+<tr>
+    <td width="65%">
+        <b>Institution:</b> Pragpur Road Junction, Taluka Mundra – Kutch, Gujarat 370415<br>
+        <b>Contact:</b> 070699 88555 / 070692 88555<br>
+        <b>Mumbai Office:</b> Borivali (E), Mumbai – 400066<br>
+        <b>Email:</b> info@ahinsadham.org
+    </td>
+    <td width="35%" style="text-align:left;">
+        <b>Date:</b> {{ payment.date_time|date:"d-M-Y" }}<br>
+        <b>Receipt No:</b> {{ donation.receipt_id }}
+    </td>
+</tr>
+</table>
 
-            <td class="right">
-                <b>Receipt No:</b> {{ payment.id }}<br>
-                <b>Date:</b> {{ payment.created_at|date:"d-M-Y" }}
-            </td>
-        </tr>
-    </table>
+<!-- DONOR -->
+<div class="section-title">Donor Details</div>
+<table>
+<tr>
+    <td width="50%"><b>Name:</b> {{ donation.donor.first_name }} {{ donation.donor.last_name }}</td>
+    <td width="50%"><b>Mobile:</b> {{ donation.donor.mobile_no }}</td>
+</tr>
+<tr>
+    <td colspan="2">
+        <b>Address:</b>
+        <div style="
+            max-height: 26px;
+            overflow: hidden;
+            line-height: 1.2;
+            word-wrap: break-word;
+            white-space: normal;
+        ">
+            {{ donation.donor.house_number }},
+            {{ donation.donor.building_name }},
+            {{ donation.donor.landmark }},
+            {{ donation.donor.area }},
+            {{ donation.donor.city }},
+            {{ donation.donor.state }},
+            {{ donation.donor.country }} - {{ donation.donor.postal_code }}
+        </div>
+    </td>
+</tr>
 
-    <hr>
+<tr>
+    <td><b>Area:</b> {{ donation.donor.area|default:"-" }}</td>
+    <td><b>Aadhar:</b> {{ donation.donor.id_number|default:"-" }}</td>
+</tr>
+</table>
 
-    <!-- DONOR DETAILS SECTION -->
-    <div class="section-header">Donor Details</div>
+<!-- DONATION -->
+<div class="section-title">Donation Details</div>
+<table>
+<tr>
+    <td width="35%"><b>Category:</b> {{ donation.donation_category.lookup_name }}</td>
+    <td width="35%"><b>Sub Category:</b> {{ donation.donation_sub_category.lookup_name }}</td>
+    <td width="30%" class="amount">{{ donation.donation_amount_paid }}</td>
+</tr>
+<tr class="total-row">
+    <td colspan="2" style="text-align:right;">Total</td>
+    <td class="amount">₹ {{ donation.donation_amount_paid }}</td>
+</tr>
+</table>
 
-    <table class="bordered">
-        <tr>
-            <td><b>Owner Name:</b> {{ payment.owner.first_name }} {{ payment.owner.last_name }}</td>
-            <td><b>Witness:</b> {{ payment.i_witness|default:"-" }}</td>
-        </tr>
+<!-- PAYMENT -->
+<table>
+<tr>
+    <td width="50%"><b>Mode:</b> {{ donation.payment_method.lookup_name }}</td>
+    <td width="50%"><b>Type:</b> Danpeti</td>
+</tr>
+<tr>
+    <td><b>Bank:</b> {{ donation.bank_name|default:"-" }}</td>
+    <td><b>Txn:</b> {{ donation.transaction_id|default:"-" }}</td>
+</tr>
+</table>
 
-        <tr>
-            <td colspan="2"><b>Address:</b> {{ payment.address|default:"-" }}</td>
-        </tr>
+<!-- LEGAL -->
+<div class="legal">
+Donation exempted u/s 80G of Income Tax Act<br>
+Trust Regn No. E-12886 Mumbai<br>
+URN: AAAJB0003AF20213 (AY 2022–23 to 2026–27)
+</div>
 
-        <tr>
-            <td><b>Payment Method:</b> {{ payment.payment_method.lookup_name }}</td>
-            <td><b>Amount:</b> ₹ {{ payment.amount }}</td>
-        </tr>
-    </table>
+<!-- SIGNATURE + THANK YOU -->
+<table>
+<tr>
+    <td width="80%"></td>
+    <td width="20%" style="text-align:center;">
+        <div class="signature-space">Trustee</div>
+        {% if signature_url %}
+        <img src="{{ signature_url }}" style="height:32px;">
+        {% endif %}
+    </td>
+</tr>
+<tr>
+    <td colspan="2" class="footer">
+        Thank you for your valuable Donation
+    </td>
+</tr>
+</table>
 
-    <!-- DONATION DETAILS SECTION -->
-    <div class="section-header">Donation Summary</div>
+</td></tr>
+</table>
 
-    <table class="bordered">
-        <tr>
-            <th>Description</th>
-            <th class="right">Amount (₹)</th>
-        </tr>
-
-        <tr>
-            <td>Donation Box Collection</td>
-            <td class="right">{{ payment.amount }}</td>
-        </tr>
-
-        <tr>
-            <td class="bold">Total</td>
-            <td class="right bold">{{ payment.amount }}</td>
-        </tr>
-    </table>
-
-    <br>
-
-    <b>Amount in Words:</b> INR {{ payment.amount }} Only<br>
-    <b>Mode of Receipt:</b> {{ payment.payment_method.lookup_name }}
-
-    <br><br><br>
-
-    <div class="right bold" style="font-size: 14px;">Trustee</div>
-
-    <br><br>
-
-    <p class="center bold" style="font-size: 14px;">
-        Thank you for your valuable donation
-    </p>
-
+<!-- SCREEN BUTTONS -->
+<div class="buttons">
+    <button onclick="window.print()" title="Print">
+        <svg viewBox="0 0 24 24">
+            <path d="M6 9V3h12v6"></path>
+            <path d="M6 14H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+    </button>
+    <a href="{% url 'donation_payment_receipt_pdf' payment.id %}" title="Download PDF">
+        <svg viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+    </a>
+    <a href="{% url 'welcome' %}" title="Back">
+        <svg viewBox="0 0 24 24">
+            <polyline points="9 14 4 9 9 4"></polyline>
+            <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+        </svg>
+    </a>
 </div>
 
 </body>

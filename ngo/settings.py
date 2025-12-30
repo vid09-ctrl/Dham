@@ -1,12 +1,16 @@
 from pathlib import Path
-
+import os
+from dotenv import load_dotenv
+import dj_database_url
+load_dotenv()
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = "django-insecure-87jejs-3pq9phwv^0u4p!_-3tx_xw&7fsd!l3!wqo6l4f5ct2o"
-DEBUG = True
-ALLOWED_HOSTS = []
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG") == "True"
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".up.railway.app"]
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -15,6 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "social_django",  
     'heart_charity.apps.HeartCharityConfig',
@@ -22,6 +27,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -55,15 +61,12 @@ WSGI_APPLICATION = "ngo.wsgi.application"
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ahinsa1',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse(
+        os.getenv("DATABASE_URL"),
+        ssl_require=True
+    )
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -81,7 +84,9 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 # Authentication
 AUTHENTICATION_BACKENDS = (
@@ -90,8 +95,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Social auth keys
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "139606461257-i5tnbi0p5qu13j72phrklb2hloca7s7p.apps.googleusercontent.com"
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("GOOGLE_CLIENT_ID")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
 
 # URLs
 LOGIN_URL = 'login'
@@ -119,5 +125,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'nanawarevidya33@gmail.com'
-EMAIL_HOST_PASSWORD = 'rwrf djer eepo bsue'  # Use App Password
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+

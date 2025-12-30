@@ -24,6 +24,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(4px);
+             pointer-events: none;
         }
 
         .popup-card {
@@ -35,6 +36,7 @@
             border-radius: 20px;
             box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.2);
             animation: popup 0.4s ease;
+            z-index: 20;
         }
 
         @keyframes popup {
@@ -216,13 +218,16 @@
             <!-- Donation Mode -->
             <div class="form-group">
                 <label>Donation Mode</label>
-                <select name="donation_mode">
-                    {% for m in donation_modes %}
-                        <option value="{{ m.id }}" {% if donation.donation_mode_id == m.id %}selected{% endif %}>
-                            {{ m }}
-                        </option>
-                    {% endfor %}
-                </select>
+              <select name="donation_mode">
+    <option value="">Select Donation Mode</option>
+    {% for m in donation_modes %}
+        <option value="{{ m.id }}"
+            {% if donation.donation_mode_id == m.id %}selected{% endif %}>
+            {{ m.lookup_name }}
+        </option>
+    {% endfor %}
+</select>
+
             </div>
 
             <!-- Payment Method -->

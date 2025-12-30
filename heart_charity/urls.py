@@ -1,6 +1,6 @@
 from django.urls import path
+
 from . import views
-from .views import generate_receipt_pdf 
 urlpatterns = [
     path("", views.home, name="home"),
 
@@ -22,11 +22,25 @@ urlpatterns = [
     path('edit_user/<int:id>/', views.edit_user, name='edit_user'),
     path('delete_user/<int:user_id>/', views.delete_user, name='delete_user'),
 path("donation/receipt/<int:id>/", views.donation_receipt, name="donation_receipt"),
-path("donation/receipt/pdf/<int:id>/", views.generate_receipt_pdf, name="download_receipt_pdf"),
 path(
     "donation-payment/receipt/<int:id>/pdf/",
     views.donation_payment_receipt_pdf,
     name="donation_payment_receipt_pdf"
+),
+path(
+    "donation-payment/receipt/<int:id>/view/",
+    views.donation_payment_receipt_view,
+    name="donation_payment_receipt_view"
+),
+path(
+    "donation-owner/receipt/<int:id>/pdf/",
+    views.donation_owner_receipt_pdf,
+    name="donation_owner_receipt_pdf"
+),
+path(
+    "donation-owner/receipt/<int:id>/view/",
+    views.donation_owner_receipt_view,
+    name="donation_owner_receipt_view"
 ),
 
     path('add_donation_box/', views.add_donation_box, name='add_donation_box'),
@@ -93,5 +107,26 @@ path('edit-box-payment/<int:id>/', views.edit_box_payment, name='edit_box_paymen
     path('delete-donation-box/<int:id>/', views.delete_donation_box, name='delete_donation_box'),
     path("donation/verify/<int:donation_id>/", views.verify_donation, name="verify_donation"),
     path("payment/verify/<int:payment_id>/", views.verify_payment, name="verify_payment"),
+      path(
+        "donation/receipt/view/<int:donation_id>/",
+        views.donation_receipt_view,
+        name="donation_receipt_view"
+    ),
+    path(
+        "donation/receipt/<int:id>/pdf/",
+        views.download_receipt_pdf,
+        name="download_receipt_pdf",
+    ),
+      path(
+        "donation-summary/<int:donor_id>/",
+        views.donation_summary_ajax,
+        name="donation_summary_ajax"
+    ),
+path(
+    "ajax/donor-details/<int:donor_id>/",
+    views.donor_details_ajax,
+    name="donor_details_ajax"
+),
+
 ]
 
