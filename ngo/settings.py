@@ -63,31 +63,40 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ngo.wsgi.application"
-DB_LIVE = os.getenv("DB_LIVE")
 
-if DB_LIVE in ["False",False]:
-    DATABASES={
-        'default':{
-            'ENGINE':'django.db.backends.sqlite3',
-            'NAME':BASE_DIR / 'db.sqlite3',
+# ===================== DATABASE (SAFE FIX ONLY) =====================
+DB_LIVE = os.getenv("DB_LIVE", "False") == "True"
+
+if DB_LIVE in ["False", False]:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
 else:
-    # ===================== DATABASE =====================
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST'),
-            'PORT': os.getenv('DB_PORT'),
+    # If DATABASE_URL exists → use it (cloud safe)
+    if os.getenv("DATABASE_URL"):
+        DATABASES = {
+            "default": dj_database_url.config(
+                default=os.environ.get("DATABASE_URL"),
+                conn_max_age=600,
+                ssl_require=True,
+            )
         }
-    }
-
-
-
+    else:
+        # Fallback to your existing manual config (UNCHANGED)
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": os.getenv("DB_NAME"),
+                "USER": os.getenv("DB_USER"),
+                "PASSWORD": os.getenv("DB_PASSWORD"),
+                "HOST": os.getenv("DB_HOST"),
+                "PORT": os.getenv("DB_PORT"),
+            }
+        }
 
 # ===================== PASSWORD VALIDATION =====================
 AUTH_PASSWORD_VALIDATORS = [
@@ -150,6 +159,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
-
-
