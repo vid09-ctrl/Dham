@@ -12,6 +12,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
+# Ensure SECRET_KEY is present in production
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "dev-secret-key-not-for-production"
+    else:
+        raise RuntimeError("SECRET_KEY environment variable is required in production")
+
 ALLOWED_HOSTS = ["*"]
 
 # ===================== APPLICATIONS =====================
