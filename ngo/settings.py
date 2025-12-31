@@ -7,11 +7,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # ===================== SECURITY =====================
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key-for-build-only")
+
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-if not SECRET_KEY:
-    raise RuntimeError("SECRET_KEY environment variable is required")
+
 
 ALLOWED_HOSTS = ["*"]
 
