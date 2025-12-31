@@ -65,7 +65,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "ngo.wsgi.application"
 
 # ===================== DATABASE (SAFE FIX ONLY) =====================
-DB_LIVE = os.getenv("DB_LIVE", "False") == "True"
+DB_LIVE = os.environ.get("DB_LIVE", "False") == "True"
 
 if DB_LIVE in ["False", False]:
     DATABASES = {
@@ -90,11 +90,11 @@ else:
         DATABASES = {
             "default": {
                 "ENGINE": "django.db.backends.postgresql",
-                "NAME": os.getenv("DB_NAME"),
-                "USER": os.getenv("DB_USER"),
-                "PASSWORD": os.getenv("DB_PASSWORD"),
-                "HOST": os.getenv("DB_HOST"),
-                "PORT": os.getenv("DB_PORT"),
+                "NAME": os.environ.get("DB_NAME"),
+                "USER": os.environ.get("DB_USER"),
+                "PASSWORD": os.environ.get("DB_PASSWORD"),
+                "HOST": os.environ.get("DB_HOST"),
+                "PORT": os.environ.get("DB_PORT"),
             }
         }
 
