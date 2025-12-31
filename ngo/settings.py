@@ -9,14 +9,14 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ===================== SECURITY =====================
-SECRET_KEY = os.getenv("SECRET_KEY") or "unsafe-dev-key"
+# Load SECRET_KEY from env; in production (DEBUG=False) it must be set.
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# Ensure SECRET_KEY is present in production
 if not SECRET_KEY:
     if DEBUG:
-        SECRET_KEY = "dev-secret-key-not-for-production"
+        SECRET_KEY = "unsafe-dev-key"
     else:
         raise RuntimeError("SECRET_KEY environment variable is required in production")
 
@@ -71,14 +71,34 @@ TEMPLATES = [
 ]
 
 # ===================== DATABASE =====================
-# Railway → PostgreSQL only
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True,
-    )
-}
+# Prefer `DATABASE_URL` (Railway provides it). Fall back to DB_* env vars,
+# then to a local sqlite file for development.
+DATABASE_URL = os.getenv("DATABASE_URL")
+db_config = {}
+if DATABASE_URL:
+    # parse returns a Django DATABASES-compatible dict
+    try:
+        db_config = dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+    except Exception:
+        db_config = {}
+
+if not db_config and os.getenv("DB_NAME"):
+    db_config = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+    }
+
+if not db_config:
+    db_config = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+
+DATABASES = {"default": db_config}
 
 # ===================== PASSWORD VALIDATION =====================
 AUTH_PASSWORD_VALIDATORS = [
