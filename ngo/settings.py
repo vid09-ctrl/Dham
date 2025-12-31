@@ -63,42 +63,28 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ngo.wsgi.application"
+DB_LIVE = os.getenv("DB_LIVE")
 
-# ===================== DATABASE =====================
-DB_ENGINE = os.getenv("DB", "postgres")
-DB_NAME = os.getenv("DEBUG_NAME", "railway")
-DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT", "5432")
-
-if DB_HOST and DB_PASSWORD:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": DB_NAME,
-            "USER": DB_USER,
-            "PASSWORD": DB_PASSWORD,
-            "HOST": DB_HOST,
-            "PORT": DB_PORT,
-            "CONN_MAX_AGE": 600,
-            "OPTIONS": {
-                "sslmode": "require",
-            },
+if DB_LIVE in ["False",False]:
+    DATABASES={
+        'default':{
+            'ENGINE':'django.db.backends.sqlite3',
+            'NAME':BASE_DIR / 'db.sqlite3',
         }
     }
+
 else:
-    # local fallback (never crash)
+    # ===================== DATABASE =====================
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT'),
         }
     }
-
-print("DB HOST =", DB_HOST)
-print("DB NAME =", DB_NAME)
-
 
 
 
