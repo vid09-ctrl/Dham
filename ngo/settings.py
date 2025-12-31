@@ -131,11 +131,11 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
-
-LOGIN_URL = "login"
-LOGOUT_URL = "logout"
-LOGIN_REDIRECT_URL = "/welcome/"
+LOGIN_URL = "/login/"
+LOGOUT_URL = "/logout/"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
 
 
 # ===================== GOOGLE LOGIN =====================
