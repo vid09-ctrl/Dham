@@ -3,15 +3,14 @@ import os
 from dotenv import load_dotenv
 import dj_database_url
 
-# Load .env
+# Load environment variables
 load_dotenv()
 
-# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ===================== SECURITY =====================
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -42,6 +41,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "ngo.urls"
+WSGI_APPLICATION = "ngo.wsgi.application"
 
 # ===================== TEMPLATES =====================
 TEMPLATES = [
@@ -62,41 +62,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "ngo.wsgi.application"
-
-# ===================== DATABASE (SAFE FIX ONLY) =====================
-DB_LIVE = os.environ.get("DB_LIVE", "False") == "True"
-
-if DB_LIVE in ["False", False]:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-
-else:
-    # If DATABASE_URL exists → use it (cloud safe)
-    if os.getenv("DATABASE_URL"):
-        DATABASES = {
-            "default": dj_database_url.config(
-                default=os.environ.get("DATABASE_URL"),
-                conn_max_age=600,
-                ssl_require=True,
-            )
-        }
-    else:
-        # Fallback to your existing manual config (UNCHANGED)
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.postgresql",
-                "NAME": os.environ.get("DB_NAME"),
-                "USER": os.environ.get("DB_USER"),
-                "PASSWORD": os.environ.get("DB_PASSWORD"),
-                "HOST": os.environ.get("DB_HOST"),
-                "PORT": os.environ.get("DB_PORT"),
-            }
-        }
+# ===================== DATABASE =====================
+# Railway → PostgreSQL only
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
+}
 
 # ===================== PASSWORD VALIDATION =====================
 AUTH_PASSWORD_VALIDATORS = [
@@ -149,8 +123,6 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.load_extra_data",
     "social_core.pipeline.user.user_details",
 )
-
-SOCIAL_AUTH_LOGGER = True
 
 # ===================== EMAIL =====================
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
