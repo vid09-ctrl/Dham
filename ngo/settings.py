@@ -9,7 +9,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ===================== SECURITY =====================
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY") or "unsafe-dev-key"
+
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Ensure SECRET_KEY is present in production
