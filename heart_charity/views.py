@@ -253,31 +253,7 @@ def send_otp(request):
         return redirect(f"/verify-otp/?phone={phone}")
     return redirect('signin')  # fallback if GET
 
-from django.contrib.auth import login
-from .models import User
-from twilio.rest import Client
 
-# Twilio credentials
-TWILIO_ACCOUNT_SID = 'AC730c5a6779806941ef6ef4215f92629a'
-TWILIO_AUTH_TOKEN = '8ab4ce8083246cb7fc38dccacc5a521b'
-TWILIO_PHONE = '+917208542366'  # Twilio number
-
-def send_otp(request):
-    if request.method == "POST":
-        phone = request.POST.get("phone")
-        otp = str(random.randint(100000, 999999))
-        otp_storage[phone] = otp
-
-        # Send SMS using Twilio
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        client.messages.create(
-            body=f"Your OTP is {otp}",
-            from_=TWILIO_PHONE,
-            to=f"+91{phone}"  # or include country code
-        )
-
-        return redirect(f"/verify-otp/?phone={phone}")
-    return redirect('signin')
 
 # ------------Globle All Search-------------------
 
