@@ -209,8 +209,7 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
-                    {% if request.user.is_authenticated %}
-
+                    {% if user.is_authenticated %}
 
                         <li class="nav-item">
                             <a href="#" class="welcome-link">Welcome, {{ request.user.username }}</a>
