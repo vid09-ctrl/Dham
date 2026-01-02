@@ -16,5 +16,6 @@ requests
 pillow
 xhtml2pdf==0.2.15
 django-extensions
+num2words
 
 
