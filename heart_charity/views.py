@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import authenticate, login, logout
 import random
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.utils import OperationalError
 from django.contrib.auth import login
 from requests import request
 from .models import DonationBox, DonationPaymentBox, User ,Donation
@@ -14,7 +15,18 @@ from heart_charity.models import LookupType   # ⬅️ ADD THIS
 
 # Create your views here.
 def home(req):
-    return render(req,'home.html')
+    """Render home page. If DB is unreachable, show maintenance page to avoid template errors.
+
+    Accessing `request.user` can trigger a DB lookup via the auth backend; if the
+    database is down we catch `OperationalError` and return a minimal maintenance page.
+    """
+    try:
+        # cheap DB check to ensure ORM can connect
+        User.objects.exists()
+    except OperationalError:
+        return render(req, 'maintenance.html', status=503)
+
+    return render(req, 'home.html')
 
 from django.contrib.auth import authenticate, login
 
