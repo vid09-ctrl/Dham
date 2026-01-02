@@ -1,9 +1,10 @@
 Django==5.2.7
 gunicorn
 whitenoise
-psycopg2-binary
 dj-database-url
 python-dotenv
+
+psycopg[binary]
 
 social-auth-app-django
 social-auth-core
@@ -17,5 +18,3 @@ pillow
 xhtml2pdf==0.2.15
 django-extensions
 num2words
-
-
