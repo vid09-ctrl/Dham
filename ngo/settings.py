@@ -1,6 +1,13 @@
 from pathlib import Path
 import os
+
+from dotenv import load_dotenv   # ✅ THIS LINE MISSING
+load_dotenv()                   # ✅ now this will work
+
 import dj_database_url
+
+
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 
