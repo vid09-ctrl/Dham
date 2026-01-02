@@ -27,12 +27,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    # ✅ django-extensions (alag app)
+    "django_extensions",
+
+    # ✅ whitenoise helper
     "whitenoise.runserver_nostatic",
 
     "social_django",
     "heart_charity.apps.HeartCharityConfig",
 ]
-
 
 # ===================== MIDDLEWARE =====================
 MIDDLEWARE = [

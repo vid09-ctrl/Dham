@@ -1,4 +1,5 @@
 from django import template
+from num2words import num2words
 
 register = template.Library()
 
@@ -8,18 +9,14 @@ def get_item(dictionary, key):
         return dictionary.get(key)
     return None
 
-# Amount-in-words filter (reusable in templates)
-try:
-    from ..helpers import amount_to_words
-except Exception:
-    # fallback import style
-    from heart_charity.helpers import amount_to_words
 
-@register.filter(name='amount_in_words')
-def amount_in_words_filter(value):
-    """Converts numeric amount to words for display in templates."""
+
+@register.filter(name='number_to_words')
+def number_to_words(value):
+    """Convert a number to words in English"""
     try:
-        return amount_to_words(value)
-    except Exception:
+        amount = float(value)
+        words = num2words(amount, lang='en_IN')
+        return words.title() + " Rupees Only"
+    except (ValueError, TypeError):
         return ""
-
