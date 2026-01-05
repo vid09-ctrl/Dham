@@ -146,7 +146,8 @@ def welcome_view(request):
     donations = Donation.objects.all().select_related('donor')
     donors = DonorVolunteer.objects.all()
 
-    lookup_types = LookupType.objects.all().order_by("id")
+    lookup_types = LookupType.objects.filter(is_deleted=False).order_by("id")
+
     lookups = Lookup.objects.select_related("lookup_type").order_by("id")
     donation_boxes = DonationBox.objects.all()
     donation_payment = DonationPaymentBox.objects.all().select_related("owner", "donation_box")
