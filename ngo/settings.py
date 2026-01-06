@@ -8,6 +8,7 @@ import dj_database_url
 
 
 
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 
@@ -152,8 +153,12 @@ LOGOUT_REDIRECT_URL = "/login/"
 
 
 # ===================== GOOGLE LOGIN =====================
+# ================= GOOGLE LOGIN FIX =================
+
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("GOOGLE_CLIENT_ID")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+
 
 
 SOCIAL_AUTH_PIPELINE = (
