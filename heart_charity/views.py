@@ -253,6 +253,8 @@ def welcome_view(request):
 
     return render(request, 'welcome.html', context)
 
+
+
 def logout_view(req):
     logout(req)
     return redirect("home")
