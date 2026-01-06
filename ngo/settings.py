@@ -87,20 +87,19 @@ TEMPLATES = [
 ]
 
 
-# ===================== DATABASE =====================
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=0,    
-            ssl_require=True,
+# Default configuration using DATABASE_URL
+DATABASES = {
+    "default": dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=0,
+        ssl_require=True,
     )
 }
 
-else:
-    # Local fallback (optional)
+# Local fallback if DATABASE_URL is not provided
+if not DATABASE_URL:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
