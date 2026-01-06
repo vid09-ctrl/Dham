@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ===================== SECURITY =====================
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key-for-build-only")
 
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = os.getenv("DEBUG", "False").lower() == "True"
 
 
 
