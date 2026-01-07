@@ -1,33 +1,34 @@
 from pathlib import Path
 import os
-
-from dotenv import load_dotenv   # ✅ THIS LINE MISSING
-load_dotenv()                   # ✅ now this will work
-
 import dj_database_url
+from dotenv import load_dotenv
 
+# Load Railway / local environment variables
+load_dotenv()
 
-
-
+# Security headers for Railway reverse proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 
-# ===================== BASE DIR =====================
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Secret key must come from Railway variable in production
+SECRET_KEY = os.getenv("SECRET_KEY", "build-only-fallback-secret")
 
-# ===================== SECURITY =====================
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key-for-build-only")
-
+# DEBUG should be controlled only through environment variable
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-
-
+# Allow hosts for production
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["https://web-production-c7334.up.railway.app","http://127.0.0.1:8000"]
 
+# Trusted origins for CSRF
+CSRF_TRUSTED_ORIGINS = [
+    "https://web-production-c7334.up.railway.app",
+    "http://127.0.0.1:8000",
+]
 
-# ===================== APPLICATIONS =====================
+# Applications
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -36,16 +37,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-   
     "django_extensions",
-
     "whitenoise.runserver_nostatic",
 
     "social_django",
     "heart_charity.apps.HeartCharityConfig",
 ]
 
-# ===================== MIDDLEWARE =====================
+# Middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -60,13 +59,11 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
-
-# ===================== URL / WSGI =====================
+# URL / WSGI
 ROOT_URLCONF = "ngo.urls"
 WSGI_APPLICATION = "ngo.wsgi.application"
 
-
-# ===================== TEMPLATES =====================
+# Templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -86,10 +83,10 @@ TEMPLATES = [
     },
 ]
 
+# ===================== DATABASE =====================
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Default configuration using DATABASE_URL
 DATABASES = {
     "default": dj_database_url.config(
         default=DATABASE_URL,
@@ -98,7 +95,7 @@ DATABASES = {
     )
 }
 
-# Local fallback if DATABASE_URL is not provided
+# Fallback to SQLite when DATABASE_URL is absent
 if not DATABASE_URL:
     DATABASES = {
         "default": {
@@ -107,8 +104,7 @@ if not DATABASE_URL:
         }
     }
 
-
-# ===================== PASSWORD VALIDATION =====================
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -116,15 +112,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
-# ===================== INTERNATIONALIZATION =====================
+# Internationalization
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# ===================== STATIC =====================
 
-# ===================== STATIC FILES =====================
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -134,34 +129,24 @@ STORAGES = {
     }
 }
 
-
-# ===================== DEFAULT PK =====================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 # ===================== AUTH =====================
+
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
+
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/welcome/"
 LOGOUT_REDIRECT_URL = "/login/"
 
-
-
-
-# ===================== GOOGLE LOGIN =====================
-# ================= GOOGLE LOGIN FIX =================
-
-# ===== FINAL GOOGLE AUTH FIX =====
+# Google OAuth keys from Railway variables
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
 
-
-
-
-
+# OAuth pipeline
 SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_details",
     "social_core.pipeline.social_auth.social_uid",
@@ -174,14 +159,12 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.user_details",
 )
 
-
 # ===================== EMAIL =====================
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
-
-
