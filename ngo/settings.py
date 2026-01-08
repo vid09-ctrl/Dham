@@ -3,32 +3,28 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 
-# Load Railway / local environment variables
+# ===================== LOAD ENV =====================
 load_dotenv()
 
-# Security headers for Railway reverse proxy
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SECURE_SSL_REDIRECT = True
-
-# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Secret key must come from Railway variable in production
-SECRET_KEY = os.getenv("SECRET_KEY", "build-only-fallback-secret")
+# ===================== SECURITY =====================
 
-# DEBUG should be controlled only through environment variable
+SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret-key")
+
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-# Allow hosts for production
 ALLOWED_HOSTS = ["*"]
 
-# Trusted origins for CSRF
 CSRF_TRUSTED_ORIGINS = [
-    "https://web-production-c7334.up.railway.app",
     "http://127.0.0.1:8000",
 ]
 
-# Applications
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = False   # ❗ Windows EC2 ke liye False rakho
+
+# ===================== APPS =====================
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -44,7 +40,8 @@ INSTALLED_APPS = [
     "heart_charity.apps.HeartCharityConfig",
 ]
 
-# Middleware
+# ===================== MIDDLEWARE =====================
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -59,11 +56,13 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
-# URL / WSGI
+# ===================== URL / WSGI =====================
+
 ROOT_URLCONF = "ngo.urls"
 WSGI_APPLICATION = "ngo.wsgi.application"
 
-# Templates
+# ===================== TEMPLATES =====================
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -87,16 +86,15 @@ TEMPLATES = [
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=0,
-        ssl_require=True,
-    )
-}
-
-# Fallback to SQLite when DATABASE_URL is absent
-if not DATABASE_URL:
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=False,
+        )
+    }
+else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -104,7 +102,8 @@ if not DATABASE_URL:
         }
     }
 
-# Password validation
+# ===================== PASSWORD VALIDATION =====================
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -112,13 +111,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# Internationalization
+# ===================== INTERNATIONALIZATION =====================
+
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ===================== STATIC =====================
+# ===================== STATIC FILES =====================
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -128,6 +128,8 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     }
 }
+
+# ===================== DEFAULT PK =====================
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -142,10 +144,11 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/welcome/"
 LOGOUT_REDIRECT_URL = "/login/"
 
-# Google OAuth keys from Railway variables
+# ===================== GOOGLE OAUTH =====================
+
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
-# OAuth pipeline
+
 SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_details",
     "social_core.pipeline.social_auth.social_uid",
