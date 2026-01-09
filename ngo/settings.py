@@ -52,30 +52,20 @@ MIDDLEWARE = [
 ]
 
 # ===================== URL / WSGI =====================
+import os
 
-ROOT_URLCONF = "ngo.urls"
-WSGI_APPLICATION = "ngo.wsgi.application"
+DB_LIVE = os.getenv("DB_LIVE", "false").lower() == "true"
 
-DB_LIVE = os.getenv("DB_LIVE", "false").lower()
-
-if DB_LIVE == "false":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
-        }
-    }
+}
 
 # ===================== TEMPLATES =====================
 
