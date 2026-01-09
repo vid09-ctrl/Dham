@@ -17,11 +17,12 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = ["*"]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://*.railway.app",
     "http://127.0.0.1:8000",
 ]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SECURE_SSL_REDIRECT = False   # ❗ Windows EC2 ke liye False rakho
+SECURE_SSL_REDIRECT = False  # Railway handles SSL
 
 # ===================== APPS =====================
 
@@ -33,9 +34,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "django_extensions",
-    "whitenoise.runserver_nostatic",
-
     "social_django",
     "heart_charity.apps.HeartCharityConfig",
 ]
@@ -45,14 +43,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
     "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
@@ -74,7 +70,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
             ],
@@ -91,7 +86,7 @@ if DATABASE_URL:
         "default": dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=600,
-            ssl_require=False,
+            ssl_require=True,
         )
     }
 else:
@@ -123,11 +118,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    }
-}
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ===================== DEFAULT PK =====================
 
@@ -139,10 +130,6 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
-
-LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/welcome/"
-LOGOUT_REDIRECT_URL = "/login/"
 
 # ===================== GOOGLE OAUTH =====================
 
@@ -160,6 +147,8 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.load_extra_data",
     "social_core.pipeline.user.user_details",
 )
+
+SOCIAL_AUTH_LOGGER = True
 
 # ===================== EMAIL =====================
 
