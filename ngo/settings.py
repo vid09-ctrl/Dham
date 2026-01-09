@@ -51,10 +51,12 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
-# ===================== URL / WSGI =====================
-import os
+# ===================== URL / WSGI (FIXED – WAS MISSING) =====================
 
-DB_LIVE = os.environ.get("DB_LIVE", "false").lower() == "true"
+ROOT_URLCONF = "ngo.urls"
+WSGI_APPLICATION = "ngo.wsgi.application"
+
+# ===================== DATABASE =====================
 
 DATABASES = {
     "default": {
@@ -87,10 +89,6 @@ TEMPLATES = [
     },
 ]
 
-
-
-
-
 # ===================== PASSWORD VALIDATION =====================
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -113,6 +111,11 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# ===================== MEDIA FILES (FIXED – WAS MISSING) =====================
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # ===================== DEFAULT PK =====================
 
