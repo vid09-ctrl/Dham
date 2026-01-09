@@ -14,17 +14,19 @@ from heart_charity.models import LookupType   # ⬅️ ADD THIS
 
 
 # Create your views here.
+def home(req):
+    """Render home page. If DB is unreachable, show maintenance page to avoid template errors.
 
-def home(request):
-    """
-    Render home page. If DB is unreachable, show maintenance page.
+    Accessing `request.user` can trigger a DB lookup via the auth backend; if the
+    database is down we catch `OperationalError` and return a minimal maintenance page.
     """
     try:
+        # cheap DB check to ensure ORM can connect
         User.objects.exists()
     except OperationalError:
-        return render(request, 'maintenance.html', status=503)
+        return render(req, 'maintenance.html', status=503)
 
-    return render(request, 'home.html')
+    return render(req, 'home.html')
 
 from django.contrib.auth import authenticate, login
 
