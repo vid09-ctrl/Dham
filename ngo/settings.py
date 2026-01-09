@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-import dj_database_url
 from dotenv import load_dotenv
 
 # ===================== LOAD ENV =====================
@@ -57,6 +56,27 @@ MIDDLEWARE = [
 ROOT_URLCONF = "ngo.urls"
 WSGI_APPLICATION = "ngo.wsgi.application"
 
+DB_LIVE = os.getenv("DB_LIVE", "false").lower()
+
+if DB_LIVE == "false":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+        }
+    }
+
 # ===================== TEMPLATES =====================
 
 TEMPLATES = [
@@ -77,25 +97,9 @@ TEMPLATES = [
     },
 ]
 
-# ===================== DATABASE =====================
 
-DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True,
-        )
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+
 
 # ===================== PASSWORD VALIDATION =====================
 
