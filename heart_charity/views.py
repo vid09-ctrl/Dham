@@ -11,22 +11,11 @@ from django.contrib.auth import login
 from requests import request
 from .models import DonationBox, DonationPaymentBox, User ,Donation
 from heart_charity.models import LookupType   # ⬅️ ADD THIS
+from django.http import HttpResponse
 
 
-# Create your views here.
-def home(req):
-    """Render home page. If DB is unreachable, show maintenance page to avoid template errors.
-
-    Accessing `request.user` can trigger a DB lookup via the auth backend; if the
-    database is down we catch `OperationalError` and return a minimal maintenance page.
-    """
-    try:
-        # cheap DB check to ensure ORM can connect
-        User.objects.exists()
-    except OperationalError:
-        return render(req, 'maintenance.html', status=503)
-
-    return render(req, 'home.html')
+def home(request):
+    return HttpResponse("Railway deployment is working")
 
 from django.contrib.auth import authenticate, login
 
