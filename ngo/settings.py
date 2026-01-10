@@ -146,6 +146,11 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 SOCIAL_AUTH_LOGGER = True
+# ===================== LOGIN / LOGOUT REDIRECT =====================
+
+LOGIN_REDIRECT_URL = "welcome"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login"
 
 # ===================== EMAIL =====================
 
