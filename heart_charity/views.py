@@ -15,7 +15,15 @@ from django.http import HttpResponse
 
 
 def home(request):
-    return HttpResponse("Railway deployment is working")
+    try:
+        User.objects.exists()
+    except OperationalError:
+        return render(request, "maintenance.html", status=503)
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    return render(request, "home.html")
 
 from django.contrib.auth import authenticate, login
 
